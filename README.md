@@ -1,6 +1,6 @@
 # go-crud-rest
 
-A simple CRUD API using `go` and `gin` with storage on postgreSQL
+A simple CRUD API in `go` using [gin](https://github.com/gin-gonic/gin) and [gorm](https://gorm.io/index.html) with storage on postgreSQL
 
 ## Running the Service locally
 
