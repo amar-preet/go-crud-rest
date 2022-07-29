@@ -1,6 +1,18 @@
 # go-crud-rest
 
-A simple CRUD API using golang and gin with storage on postgreSQL 
+A simple CRUD API using golang and gin with storage on postgreSQL
+
+## Running the Service locally
+
+Make sure local PostgreSQL database is running. 
+Run
+```
+go mod tidy
+make run
+```
+
+
+## Testing the endpoints
 
 <details>
 <summary>
