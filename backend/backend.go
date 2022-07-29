@@ -23,7 +23,7 @@ func connectDB() (*gorm.DB, error) {
 	return db, nil
 }
 
-// getAlbums responds with the list of all albums as JSON.
+// getAlbums
 func GetAlbums(c *gin.Context) {
 	var body []models.Album
 
@@ -40,7 +40,7 @@ func GetAlbums(c *gin.Context) {
 	c.JSON(http.StatusOK, &body)
 }
 
-// postAlbums adds an album from JSON received in the request body.
+// postAlbums
 func PostAlbums(c *gin.Context) {
 	var body models.Album
 
@@ -62,6 +62,7 @@ func PostAlbums(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, &body)
 }
 
+// get album by ID
 func GetAlbumByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -79,6 +80,7 @@ func GetAlbumByID(c *gin.Context) {
 	c.JSON(http.StatusOK, &body)
 }
 
+// delete album by ID
 func DeleteAlbumByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -96,11 +98,11 @@ func DeleteAlbumByID(c *gin.Context) {
 	c.JSON(http.StatusOK, &body)
 }
 
+// update album by ID
 func UpdateAlbumByID(c *gin.Context) {
 	id := c.Param("id")
 	var body models.UpdateAlbumRequestBody
 
-	// getting request's body
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
