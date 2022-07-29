@@ -5,7 +5,7 @@ A simple CRUD API in `go` using [gin](https://github.com/gin-gonic/gin) and [gor
 ## Running the Service locally
 
 Make sure local PostgreSQL database is running. 
-Run
+Then Run,
 ```
 go mod tidy
 make run
