@@ -7,7 +7,7 @@ A simple CRUD API using golang and gin with storage on postgreSQL
 GET Albums
 </summary>
 
-`curl localhost:8080/albums`
+`curl http://localhost:8080/albums`
 </details>
 
 <details>
@@ -23,13 +23,13 @@ GET Album By ID
 POST an Album
 </summary>
 
-`
+```
 curl http://localhost:8080/albums \
     --include \
     --header "Content-Type: application/json" \
     --request "POST" \
     --data '{"title": "Fire","artist": "Tiesto","price": 29}'
-`
+```
 </details>
 
 <details>
@@ -45,5 +45,5 @@ DELETE Album By ID
 UPDATE Album By ID
 </summary>
 
-`curl -X PUT -d '{"price" : 12}' localhost:8080/albums/1`
+`curl -X PUT -d '{"price" : 12}' http://localhost:8080/albums/1`
 </details>
