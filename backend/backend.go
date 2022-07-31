@@ -2,36 +2,23 @@ package backend
 
 import (
 	"go-crud-rest/models"
-	"log"
 	"net/http"
 
 	_ "github.com/lib/pq"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func connectDB() (*gorm.DB, error) {
-	dsn := "host=localhost user=postgres password=root dbname=User port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Printf("failed to connect to database: %v", err)
-		return &gorm.DB{}, err
-	}
-	db.AutoMigrate(&models.Album{})
-	return db, nil
+type Handler struct {
+	DB *gorm.DB
 }
 
 // getAlbums
-func GetAlbums(c *gin.Context) {
+func (h Handler) GetAlbums(c *gin.Context) {
 	var body []models.Album
 
-	db, err := connectDB()
-	if err != nil {
-		log.Fatalf("failed to start the server: %v", err)
-	}
-	if result := db.Find(&body); result.Error != nil {
+	if result := h.DB.Find(&body); result.Error != nil {
 		c.AbortWithError(http.StatusNotFound, result.Error)
 
 		return
@@ -41,20 +28,14 @@ func GetAlbums(c *gin.Context) {
 }
 
 // postAlbums
-func PostAlbums(c *gin.Context) {
+func (h Handler) PostAlbums(c *gin.Context) {
 	var body models.Album
-
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	db, err := connectDB()
-	if err != nil {
-		log.Fatalf("failed to start the server: %v", err)
-	}
-
-	if result := db.Create(&body); result.Error != nil {
+	if result := h.DB.Create(&body); result.Error != nil {
 		c.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
@@ -63,15 +44,10 @@ func PostAlbums(c *gin.Context) {
 }
 
 // get album by ID
-func GetAlbumByID(c *gin.Context) {
+func (h Handler) GetAlbumByID(c *gin.Context) {
 	id := c.Param("id")
-
 	var body models.Album
-	db, err := connectDB()
-	if err != nil {
-		log.Fatalf("failed to start the server: %v", err)
-	}
-	if result := db.First(&body, id); result.Error != nil {
+	if result := h.DB.First(&body, id); result.Error != nil {
 		c.AbortWithError(http.StatusNotFound, result.Error)
 
 		return
@@ -81,15 +57,10 @@ func GetAlbumByID(c *gin.Context) {
 }
 
 // delete album by ID
-func DeleteAlbumByID(c *gin.Context) {
+func (h Handler) DeleteAlbumByID(c *gin.Context) {
 	id := c.Param("id")
-
 	var body models.Album
-	db, err := connectDB()
-	if err != nil {
-		log.Fatalf("failed to start the server: %v", err)
-	}
-	if result := db.Delete(&body, id); result.Error != nil {
+	if result := h.DB.Delete(&body, id); result.Error != nil {
 		c.AbortWithError(http.StatusNotFound, result.Error)
 
 		return
@@ -99,7 +70,7 @@ func DeleteAlbumByID(c *gin.Context) {
 }
 
 // update album by ID
-func UpdateAlbumByID(c *gin.Context) {
+func (h Handler) UpdateAlbumByID(c *gin.Context) {
 	id := c.Param("id")
 	var body models.UpdateAlbumRequestBody
 
@@ -108,14 +79,8 @@ func UpdateAlbumByID(c *gin.Context) {
 		return
 	}
 
-	db, err := connectDB()
-	if err != nil {
-		log.Fatalf("failed to start the server: %v", err)
-	}
-
 	var album models.Album
-
-	if result := db.First(&album, id); result.Error != nil {
+	if result := h.DB.First(&album, id); result.Error != nil {
 		c.AbortWithError(http.StatusNotFound, result.Error)
 
 		return
@@ -125,6 +90,6 @@ func UpdateAlbumByID(c *gin.Context) {
 	album.Title = body.Title
 	album.Price = body.Price
 
-	db.Save(&album)
+	h.DB.Save(&album)
 	c.JSON(http.StatusOK, &album)
 }
